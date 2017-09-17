@@ -2,26 +2,26 @@ package org.kulig.renewableenergy.Energy;
 
 import java.util.List;
 
-import org.kulig.renewableenergy.model.entities.PvSystemEnergyDistribution;
+import org.kulig.renewableenergy.model.entities.PvSystemEnergyBilance;
 
 public class G11AnnualEnergyBilanceStrategy implements AnnualEnergyBilanceStrategy {
 	private double energyStored = 0;
 	private double correctionFactor;
 
 	@Override
-	public List<PvSystemEnergyDistribution> calculateAnnualEnergyBalance(AnnualEnergyBilanceInputData data) {
+	public List<PvSystemEnergyBilance> calculateAnnualEnergyBalance(AnnualEnergyBilanceInputData data) {
 		correctionFactor = data.getCorrectionFactor();
 		return settlePeriods(new EnergyBilanceCalculator(data).calculateYearlyEnergyBilance("G11"));
 	}
 
-	private List<PvSystemEnergyDistribution> settlePeriods(List<PvSystemEnergyDistribution> periodsEnergyBilance) {
-		for (PvSystemEnergyDistribution distribution : periodsEnergyBilance) {
+	private List<PvSystemEnergyBilance> settlePeriods(List<PvSystemEnergyBilance> periodsEnergyBilance) {
+		for (PvSystemEnergyBilance distribution : periodsEnergyBilance) {
 			distribution.setPeriodEnergyPurchasedDay(getAmountOfEnergyPurchased(distribution));
 		}
 		return periodsEnergyBilance;
 	}
 
-	private double getAmountOfEnergyPurchased(PvSystemEnergyDistribution distribution) {
+	private double getAmountOfEnergyPurchased(PvSystemEnergyBilance distribution) {
 		double energyToPurchase = distribution.getPeriodEnergyTakenFromGridDay()
 				- distribution.getPeriodEnergyGridFeedInDay() * correctionFactor;
 		if (energyToPurchase >= 0) {

@@ -1,26 +1,28 @@
 package org.kulig.renewableenergy.model.DTO;
 
-public class EconomicAnalysisDTO {
+import org.kulig.renewableenergy.economicAnalysis.Credit;
+import org.springframework.stereotype.Component;
+
+@Component
+public class EconomicAnalysisData {
 	//cena energii
 	private double electricityPriceDayTariff;
 	private double electricityPriceNightTariff;
 	private double fixedGridFee;
 	private double variableGridFeeDay;
 	private double variableGridFeeNight;
-	private double qualityRateFee; //czy ona jest dzien/noc
+	private double qualityRateFeeDay;
+	private double qualityRateFeeNight;
 	private double transitionalFee; // opłata przejsciowa
-	private double RESFee;
-	private double subscriptionFee;
+	private double RESFee = 0.02;
 	//wklad wlasny
-	private double ownContribution; // procentowo czy kwota
+	private double ownContribution; // kwota
 	private double riskPremium;
-	private double referenceRate; //oprocentowanie lokaty
+	private double referenceRate =1.5; //oprocentowanie lokaty
 	//oprocentowanie kredytu
-	private double interestRate;
-	private double creditDuration;
-	private double annualInstalmentPeriods;
-	private double creditAmount;
-	private boolean isInstallmentFixed;
+	private Credit credit;
+	
+	private double totalBudget;
 	
 	//bezzwrotny udzial
 	private double subsidy;
@@ -28,10 +30,8 @@ public class EconomicAnalysisDTO {
 	//instalacja pv
 	private double operatingCosts;
 		
-
-	private double initialInvestmentCost; //io
-	private double annualIncreaseOfElectricityPrice;
-	private double inflation;
+	private double annualIncreaseOfElectricityPrice =4.7;
+	private double inflation = 2.13;
 
 	public double getElectricityPriceDayTariff() {
 		return electricityPriceDayTariff;
@@ -63,12 +63,7 @@ public class EconomicAnalysisDTO {
 	public void setVariableGridFeeNight(double variableGridFeeNight) {
 		this.variableGridFeeNight = variableGridFeeNight;
 	}
-	public double getQualityRateFee() {
-		return qualityRateFee;
-	}
-	public void setQualityRateFee(double qualityRateFee) {
-		this.qualityRateFee = qualityRateFee;
-	}
+
 	public double getTransitionalFee() {
 		return transitionalFee;
 	}
@@ -80,12 +75,6 @@ public class EconomicAnalysisDTO {
 	}
 	public void setRESFee(double rESFee) {
 		RESFee = rESFee;
-	}
-	public double getSubscriptionFee() {
-		return subscriptionFee;
-	}
-	public void setSubscriptionFee(double subscriptionFee) {
-		this.subscriptionFee = subscriptionFee;
 	}
 	public double getOwnContribution() {
 		return ownContribution;
@@ -105,35 +94,12 @@ public class EconomicAnalysisDTO {
 	public void setReferenceRate(double referenceRate) {
 		this.referenceRate = referenceRate;
 	}
-	public double getInterestRate() {
-		return interestRate;
+	
+	public Credit getCredit() {
+		return credit;
 	}
-	public void setInterestRate(double interestRate) {
-		this.interestRate = interestRate;
-	}
-	public double getCreditDuration() {
-		return creditDuration;
-	}
-	public void setCreditDuration(double creditDuration) {
-		this.creditDuration = creditDuration;
-	}
-	public double getAnnualInstalmentPeriods() {
-		return annualInstalmentPeriods;
-	}
-	public void setAnnualInstalmentPeriods(double annualInstalmentPeriods) {
-		this.annualInstalmentPeriods = annualInstalmentPeriods;
-	}
-	public double getCreditAmount() {
-		return creditAmount;
-	}
-	public void setCreditAmount(double creditAmount) {
-		this.creditAmount = creditAmount;
-	}
-	public boolean isInstallmentFixed() {
-		return isInstallmentFixed;
-	}
-	public void setInstallmentFixed(boolean isInstallmentFixed) {
-		this.isInstallmentFixed = isInstallmentFixed;
+	public void setCredit(Credit credit) {
+		this.credit = credit;
 	}
 	public double getSubsidy() {
 		return subsidy;
@@ -147,12 +113,6 @@ public class EconomicAnalysisDTO {
 	public void setOperatingCosts(double operatingCosts) {
 		this.operatingCosts = operatingCosts;
 	}
-	public double getInitialInvestmentCost() {
-		return initialInvestmentCost;
-	}
-	public void setInitialInvestmentCost(double initialInvestmentCost) {
-		this.initialInvestmentCost = initialInvestmentCost;
-	}
 	public double getAnnualIncreaseOfElectricityPrice() {
 		return annualIncreaseOfElectricityPrice;
 	}
@@ -164,8 +124,25 @@ public class EconomicAnalysisDTO {
 	}
 	public void setInflation(double inflation) {
 		this.inflation = inflation;
-	} 
+	}
+	public double getQualityRateFeeDay() {
+		return qualityRateFeeDay;
+	}
+	public void setQualityRateFeeDay(double qualityRateFeeDay) {
+		this.qualityRateFeeDay = qualityRateFeeDay;
+	}
+	public double getQualityRateFeeNight() {
+		return qualityRateFeeNight;
+	}
+	public void setQualityRateFeeNight(double qualityRateFeeNight) {
+		this.qualityRateFeeNight = qualityRateFeeNight;
+	}
+	public double getTotalBudget() {
+		return totalBudget;
+	}
+	public void setTotalBudget(double totalBudget) {
+		this.totalBudget = totalBudget;
+	}
 	
 	
-
 }

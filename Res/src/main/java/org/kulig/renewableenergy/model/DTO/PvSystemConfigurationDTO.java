@@ -7,6 +7,16 @@ public class PvSystemConfigurationDTO {
 	private double annualEnergyConsumption;
 	private  TariffGroup tariffGroup;
 	private PvModule pvModule;
+	private int numberOFSettlementPeriods;
+	private String methodOfSettlement;
+	private int numberOfModules;
+	
+	public String getMethodOfSettlement() {
+		return methodOfSettlement;
+	}
+	public void setMethodOfSettlement(String methodOfSettlement) {
+		this.methodOfSettlement = methodOfSettlement;
+	}
 	public double getAnnualEnergyConsumption() {
 		return annualEnergyConsumption;
 	}
@@ -25,6 +35,21 @@ public class PvSystemConfigurationDTO {
 	public void setPvModule(PvModule pvModule) {
 		this.pvModule = pvModule;
 	}
+	public int getNumberOFSettlementPeriods() {
+		return numberOFSettlementPeriods;
+	}
+	public void setNumberOFSettlementPeriods(int numberOFSettlementPeriods) {
+		this.numberOFSettlementPeriods = numberOFSettlementPeriods;
+	}
+	public int getNumberOfModules() {
+		return numberOfModules;
+	}
+	public void setNumberOfModules(int numberOfModules) {
+		this.numberOfModules = numberOfModules;
+	}
+
+	
+	
 	
 
 	

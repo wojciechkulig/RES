@@ -20,14 +20,15 @@ public class IrradianceBarChart {
 
 	
 	public String drawMonthlyIrradianceBarChart(List<Double> irradiance){
-		irradiance = formatIrradianceMonthlyValuesIntoPercentages(irradiance);
+		double maxVal = irradiance.stream().max((o1,o2)->(int)(o1-o2)).orElse(0.0);
+		irradiance = formatIrradianceMonthlyValuesIntoPercentages(irradiance,maxVal);
 	    BarChartPlot barChartPlot = Plots.newBarChartPlot(Data.newData(irradiance), Color.AQUAMARINE);
 	    // Instantiating chart.
 	    BarChart chart = GCharts.newBarChart(barChartPlot);
 
 	    // Defining axis info and styles
 	    AxisStyle axisStyle = AxisStyle.newAxisStyle(Color.BLACK, 13, AxisTextAlignment.CENTER);
-	    AxisLabels y = AxisLabelsFactory.newAxisLabels("      [%]", 50.0);
+	    AxisLabels y = AxisLabelsFactory.newAxisLabels("kwh/m2*miesiąc", 50.0);
 	    y.setAxisStyle(axisStyle);
 	    AxisLabels x = AxisLabelsFactory.newAxisLabels("Miesiąc", 50.0);
 	    x.setAxisStyle(axisStyle);
@@ -35,7 +36,7 @@ public class IrradianceBarChart {
 	    // Adding axis info to chart.
 	    chart.addXAxisLabels(AxisLabelsFactory.newAxisLabels("01", "02", "03", "04","05","06","07","08","09"
 	    		,"10","11","12"));
-	    chart.addYAxisLabels(AxisLabelsFactory.newNumericRangeAxisLabels(0, 25));
+	    chart.addYAxisLabels(AxisLabelsFactory.newNumericRangeAxisLabels(0, maxVal));
 	    chart.addYAxisLabels(y);
 	    chart.addXAxisLabels(x);
 
@@ -52,9 +53,8 @@ public class IrradianceBarChart {
 		return url;
 	}
 
-	private List<Double> formatIrradianceMonthlyValuesIntoPercentages(List<Double> irradiance) {
-		Double yearlyIrradiance = irradiance.stream().mapToDouble(Double::doubleValue).sum();
-		return irradiance.stream().map(i->100*(i*100/yearlyIrradiance)/25).collect(Collectors.toList());		
+	private List<Double> formatIrradianceMonthlyValuesIntoPercentages(List<Double> irradiance, double maxVal) {
+		return irradiance.stream().map(i-> i*100/maxVal).collect(Collectors.toList());		
 	}
 
 }

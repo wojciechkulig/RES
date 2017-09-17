@@ -2,10 +2,10 @@ package org.kulig.renewableenergy.economicAnalysis;
 
 public class Credit {
 	private double interestRate;
-	private double creditDuration;
-	private double annualInstalmentPeriods;
+	private int creditDuration;
+	private int annualInstalmentPeriods;
 	private double creditAmount;
-	private boolean isInstallmentFixed;
+	private String installmentType;
 	
 	public double getInterestRate() {
 		return interestRate;
@@ -13,16 +13,18 @@ public class Credit {
 	public void setInterestRate(double interestRate) {
 		this.interestRate = interestRate;
 	}
-	public double getCreditDuration() {
+
+	public int getCreditDuration() {
 		return creditDuration;
 	}
-	public void setCreditDuration(double creditDuration) {
+	public void setCreditDuration(int creditDuration) {
 		this.creditDuration = creditDuration;
 	}
-	public double getAnnualInstalmentPeriods() {
+	
+	public int getAnnualInstalmentPeriods() {
 		return annualInstalmentPeriods;
 	}
-	public void setAnnualInstalmentPeriods(double annualInstalmentPeriods) {
+	public void setAnnualInstalmentPeriods(int annualInstalmentPeriods) {
 		this.annualInstalmentPeriods = annualInstalmentPeriods;
 	}
 	public double getCreditAmount() {
@@ -31,11 +33,12 @@ public class Credit {
 	public void setCreditAmount(double creditAmount) {
 		this.creditAmount = creditAmount;
 	}
-	public boolean isInstallmentFixed() {
-		return isInstallmentFixed;
+	public String getInstallmentType() {
+		return installmentType;
 	}
-	public void setInstallmentFixed(boolean isInstallmentFixed) {
-		this.isInstallmentFixed = isInstallmentFixed;
+	public void setInstallmentType(String installmentType) {
+		this.installmentType = installmentType;
 	}
+
 	
 }

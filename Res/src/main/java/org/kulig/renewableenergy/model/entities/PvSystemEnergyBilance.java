@@ -2,7 +2,7 @@ package org.kulig.renewableenergy.model.entities;
 
 import java.util.List;
 
-public class PvSystemEnergyDistribution {
+public class PvSystemEnergyBilance {
 	private List<Double> hourlyEnergyConsumptionDay;
 	private List<Double> hourlyEnergyConsumptionNight;
 	private List<Double> hourlyEnergyYieldDay;

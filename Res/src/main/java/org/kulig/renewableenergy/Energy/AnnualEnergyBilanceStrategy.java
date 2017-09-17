@@ -2,9 +2,9 @@ package org.kulig.renewableenergy.Energy;
 
 import java.util.List;
 
-import org.kulig.renewableenergy.model.entities.PvSystemEnergyDistribution;
+import org.kulig.renewableenergy.model.entities.PvSystemEnergyBilance;
 
 public interface AnnualEnergyBilanceStrategy {
-	public List<PvSystemEnergyDistribution> calculateAnnualEnergyBalance(AnnualEnergyBilanceInputData data);
+	public List<PvSystemEnergyBilance> calculateAnnualEnergyBalance(AnnualEnergyBilanceInputData data);
 
 }

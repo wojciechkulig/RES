@@ -15,6 +15,7 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 <style>
 body {
 	padding-top: 40px;
@@ -32,9 +33,13 @@ body {
 	font-size: 27px;
 	padding: 10px;
 }
+.chart{
+	height:auto;
+	width: 100%;
+}
 </style>
 </head>
-<body>
+<body onload="showHideMethodOfSettlement();">
 	<mytags:navbar />
 	<div class="container panel panel-default"
 		style="margin-top: 20px; padding: 20px">
@@ -60,12 +65,40 @@ body {
 									</form:select>
 								</div>
 							</div>
+							<div class="form-group" id="methodOfSettlement"
+								style="display: none">
+								<div class="col-md-10 col-md-offset-1">
+									<label for="tafiffGroup">Wybierz sposób rozliczania</label>
+									<form:select class="form-control" path="methodOfSettlement">
+										<form:option value="Energa">Energa</form:option>
+										<form:option value="Innogy">Innogy</form:option>
+										<form:option value="PGE">PGE</form:option>
+										<form:option value="Tauron">Tauron</form:option>
+									</form:select>
+								</div>
+							</div>
 							<div class="form-group">
 								<div class="col-md-10 col-md-offset-1">
 									<label for="annualEnergyConsumption">Wprowadź roczne
 										zużycie energii [kWh]</label>
 									<form:input type="text" class="form-control"
 										path="annualEnergyConsumption" id="annualEnergyConsumption" />
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-md-10 col-md-offset-1">
+									<label for="numberOFSettlementPeriods">Wprowadź liczbę
+										okresów rozliczeniowych w ciągu roku</label>
+									<form:select type="text" class="form-control"
+										path="numberOFSettlementPeriods"
+										id="numberOFSettlementPeriods">
+										<form:option value="1">1</form:option>
+										<form:option value="2">2</form:option>
+										<form:option value="3">3</form:option>
+										<form:option value="4">4</form:option>
+										<form:option value="6">6</form:option>
+										<form:option value="12">12</form:option>
+									</form:select>
 								</div>
 							</div>
 
@@ -79,19 +112,24 @@ body {
 					<div class="panel panel-default" style="width: 100%">
 
 						<fieldset>
-							<legend class="text-center header">Wybierz panel
-								fotowoltaiczny</legend>
+							<legend class="text-center header">Podaj parametry instalacji fotowoltaicznej</legend>
 							<div class="form-group">
 								<div class="col-md-10 col-md-offset-1">
 									<label for="pvModule">Wybierz panel fotowoltaiczny</label>
-									<form:select class="form-control" path="pvModule"
-										id="pvModule">
+									<form:select class="form-control" path="pvModule" id="pvModule">
 										<c:forEach var="pvModule" items="${pvModules}">
 											<form:option value="${pvModule}">${pvModule.name} </form:option>
 										</c:forEach>
 									</form:select>
 								</div>
 							</div>
+							<div class ="form-group">
+								<div class="col-md-10 col-md-offset-1">
+									<label for="numberOfModules">Wprowadź liczbę paneli fotowoltaicznych</label>
+									<form:input id ="numberOfModules" path="numberOfModules" class="form-control"/>
+								</div>
+							</div>
+							
 
 							<div class="form-group">
 								<div class="col-md-12 text-center">
@@ -104,6 +142,40 @@ body {
 			</div>
 		</form:form>
 
+		<c:if test="${not empty chartUrl}">
+		<div class="row flexbox">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="text-center header">Bilans energii dla pierwszego roku</div>
+					<img class="chart" alt="Bilans energii" src="${chartUrl}">
+				</div>
+				<a href='<spring:url value="/analizaEkonomiczna" htmlEscape="true"/>' class="btn btn-primary btn-lg">Przejdź do analizy ekonomicznej</a>
+			</div>
+			</div>
+		</c:if>
+
 	</div>
+	<script type="text/javascript">
+		var tariff = document.getElementById("tafiffGroup");
+		function showHideMethodOfSettlement(){
+		if (tariff.options[tariff.selectedIndex].text == "G12" || tariff.options[tariff.selectedIndex].text == "G12W") {
+			console.log("tak");
+			document.getElementById("methodOfSettlement").style.display = "block"
+		} else {
+			console.log("nie");
+			document.getElementById("methodOfSettlement").style.display = "none";
+		}
+	};
+		tariff.addEventListener("change",function(){
+			if (tariff.options[tariff.selectedIndex].text == "G12" || tariff.options[tariff.selectedIndex].text == "G12W") {
+				console.log("tak");
+				document.getElementById("methodOfSettlement").style.display = "block"
+			} else {
+				console.log("nie");
+				document.getElementById("methodOfSettlement").style.display = "none";
+			}
+		});
+	</script>
 </body>
+
 </html>

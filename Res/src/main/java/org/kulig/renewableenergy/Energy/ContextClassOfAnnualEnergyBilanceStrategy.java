@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 import org.kulig.renewableenergy.model.PowerOutputDevices.DevicePowerOutput;
 import org.kulig.renewableenergy.model.PvSystem.PvModule.PvModuleDegradation;
 import org.kulig.renewableenergy.model.entities.HourlyEnergyConsumption;
-import org.kulig.renewableenergy.model.entities.PvSystemEnergyDistribution;
+import org.kulig.renewableenergy.model.entities.PvSystemEnergyBilance;
 import org.kulig.renewableenergy.model.entities.Weather;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EnergyDistributionCalculator {
+public class ContextClassOfAnnualEnergyBilanceStrategy {
 	private static final int ANNUAL_NUMBER_OF_HOURS = 8760;
 	private static final double CORRECTION_FACTOR_LESS_THAN_10KW = 0.8;
 	private static final double CORRECTION_FACTOR_MORE_THAN_10KW = 0.7;
@@ -32,7 +32,7 @@ public class EnergyDistributionCalculator {
 	private List<Double> hourlyEnergyYieldFirstYear;
 	private List<Double> hourlyEnergyYield;
 
-	public EnergyDistributionCalculator(DevicePowerOutput devicePowerOutput,
+	public ContextClassOfAnnualEnergyBilanceStrategy(DevicePowerOutput devicePowerOutput,
 			List<Weather> hourlyWeatherConditions, List<HourlyEnergyConsumption> hourlyEnergyConsumption) {
 		lifeTimePeriod = 15;
 		annualIncreaseInEnergyDemand = 1.009;
@@ -42,10 +42,10 @@ public class EnergyDistributionCalculator {
 		
 
 	}
-	public List<List<PvSystemEnergyDistribution>> calculateLifeTimeEnergyBalance(int numberOfSettlementPeriods, String tariffGroup){
+	public List<List<PvSystemEnergyBilance>> calculateLifeTimeEnergyBalance(int numberOfSettlementPeriods, String tariffGroup){
 		
 		calculateHourlyEnergyYield();
-		List<List<PvSystemEnergyDistribution>> yearlyEnergyDistribution = new ArrayList<>();
+		List<List<PvSystemEnergyBilance>> yearlyEnergyDistribution = new ArrayList<>();
 		for(int i=0 ; i<lifeTimePeriod; i++){
 			setSystemStateForYear(i);
 			yearlyEnergyDistribution.add(createStrategy(tariffGroup).calculateAnnualEnergyBalance(getAnnualEnergyBilanceData(numberOfSettlementPeriods)));
@@ -53,10 +53,34 @@ public class EnergyDistributionCalculator {
 		return yearlyEnergyDistribution;
 	}
 
-	//tutaj bedzie sposob juz konkretny czyli np. g12 tauron
+	//w rozwijanlej liscie musi byc String, ktory jasno okresli jaka to jest nazwa grupy taryfowej np G12Tauron, G12WEnerga itp.
 	private AnnualEnergyBilanceStrategy createStrategy(String tariffGroup) {
 		if(tariffGroup.equals("G11")){
 			return new G11AnnualEnergyBilanceStrategy();
+		}
+		if(tariffGroup.equals("G12 Energa")){
+			return new G12EnergaEnergyBilanceStrategy();
+		}
+		if(tariffGroup.equals("G12 Innogy")){
+			return new G12InnogyEnergyBilanceStrategy();
+		}
+		if(tariffGroup.equals("G12 PGE")){
+			return new G12PgeEnergyBilanceStrategy();
+		}
+		if(tariffGroup.equals("G12 Tauron")){
+			return new G12TauronEnergyBilanceStrategy();
+		}
+		if(tariffGroup.equals("G12W Energa")){
+			return new G12WEnergaEnergyBilanceStrategy();
+		}
+		if(tariffGroup.equals("G12W Innogy")){
+			return new G12WInnogyEnergyBilanceStrategy();
+		}
+		if(tariffGroup.equals("G12W PGE")){
+			return new G12WPgeEnergyBilanceStrategy();
+		}
+		if(tariffGroup.equals("G12W Tauron")){
+			return new G12WTauronEnergyBilanceStrategy();
 		}
 		return null;
 		
@@ -78,7 +102,7 @@ public class EnergyDistributionCalculator {
 		data.setHourlyEnergyYield(hourlyEnergyYield);
 		data.setHourlyWeatherConditions(hourlyWeatherConditions);
 		data.setNumberOfSettlementPeriods(numberOfSettlementPeriods);
-		return null;
+		return data;
 	}
 	private double getCorrectionFactor() {
 		if(devicePowerOutput.getNominalPower() >10000){

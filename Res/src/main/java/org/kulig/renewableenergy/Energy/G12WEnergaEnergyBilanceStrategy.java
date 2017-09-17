@@ -4,7 +4,8 @@ import java.util.List;
 
 import org.kulig.renewableenergy.model.entities.PvSystemEnergyBilance;
 
-public class G12InnogyEnergyBilanceStrategy implements AnnualEnergyBilanceStrategy {
+public class G12WEnergaEnergyBilanceStrategy implements AnnualEnergyBilanceStrategy {
+
 	private double energyStoredDay = 0;
 	private double energyStoredNight = 0;
 	private double correctionFactor;
@@ -12,17 +13,34 @@ public class G12InnogyEnergyBilanceStrategy implements AnnualEnergyBilanceStrate
 	@Override
 	public List<PvSystemEnergyBilance> calculateAnnualEnergyBalance(AnnualEnergyBilanceInputData data) {
 		correctionFactor = data.getCorrectionFactor();
-		return settlePeriods(new EnergyBilanceCalculator(data).calculateYearlyEnergyBilance("G12"));
+		return settlePeriods(new EnergyBilanceCalculator(data).calculateYearlyEnergyBilance("G12W"));
 	}
 
-	private List<PvSystemEnergyBilance> settlePeriods(List<PvSystemEnergyBilance> periodsEnergyBilance) {
-		for (PvSystemEnergyBilance distribution : periodsEnergyBilance) {
-			distribution.setPeriodEnergyPurchasedDay(getAmountOfEnergyPurchasedDay(distribution));
-			distribution.setPeriodEnergyPurchasedNight(getAmountOfEnergyPurchasedNight(distribution));
+	private List<PvSystemEnergyBilance> settlePeriods(
+			List<PvSystemEnergyBilance> periodsEnergyBilance) {
+		for(PvSystemEnergyBilance distribution : periodsEnergyBilance){
+			settlePeriod(distribution);
 		}
 		return periodsEnergyBilance;
 	}
-
+	//czy bilansowac dzien noca? to jest raczej nie mozliwy przypadek
+	private void settlePeriod(PvSystemEnergyBilance distribution) {
+		double energyToPurchaseDay = getAmountOfEnergyPurchasedDay(distribution);
+		double energyToPurchaseNight = getAmountOfEnergyPurchasedNight(distribution);
+		if(energyToPurchaseNight > 0){
+			if(energyStoredDay >= energyToPurchaseNight){
+				energyStoredDay -=energyToPurchaseNight;
+				energyToPurchaseNight = 0;
+			}else{
+				energyToPurchaseNight -=energyStoredDay;
+				energyStoredDay = 0;
+			}
+		}
+		distribution.setPeriodEnergyPurchasedDay(energyToPurchaseDay);
+		distribution.setPeriodEnergyPurchasedNight(energyToPurchaseNight);
+		
+	}
+	
 	private double getAmountOfEnergyPurchasedDay(PvSystemEnergyBilance distribution) {
 		double energyToPurchase = distribution.getPeriodEnergyTakenFromGridDay()
 				- distribution.getPeriodEnergyGridFeedInDay() * correctionFactor;

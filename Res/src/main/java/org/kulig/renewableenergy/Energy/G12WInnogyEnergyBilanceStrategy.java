@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.kulig.renewableenergy.model.entities.PvSystemEnergyBilance;
 
-public class G12InnogyEnergyBilanceStrategy implements AnnualEnergyBilanceStrategy {
+public class G12WInnogyEnergyBilanceStrategy  implements AnnualEnergyBilanceStrategy{
 	private double energyStoredDay = 0;
 	private double energyStoredNight = 0;
 	private double correctionFactor;
@@ -12,7 +12,7 @@ public class G12InnogyEnergyBilanceStrategy implements AnnualEnergyBilanceStrate
 	@Override
 	public List<PvSystemEnergyBilance> calculateAnnualEnergyBalance(AnnualEnergyBilanceInputData data) {
 		correctionFactor = data.getCorrectionFactor();
-		return settlePeriods(new EnergyBilanceCalculator(data).calculateYearlyEnergyBilance("G12"));
+		return settlePeriods(new EnergyBilanceCalculator(data).calculateYearlyEnergyBilance("G12W"));
 	}
 
 	private List<PvSystemEnergyBilance> settlePeriods(List<PvSystemEnergyBilance> periodsEnergyBilance) {
@@ -68,5 +68,4 @@ public class G12InnogyEnergyBilanceStrategy implements AnnualEnergyBilanceStrate
 	private void storeExcessEnergyNight(double energyToPurchase) {
 		energyStoredNight += energyToPurchase;
 	}
-
 }

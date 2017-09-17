@@ -7,7 +7,9 @@ import org.kulig.renewableenergy.model.entities.TariffGroup;
 import org.kulig.renewableenergy.repository.TariffGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TariffGroupServiceImpl implements TariffGroupService {
 	@Autowired
 	private TariffGroupRepository tariffGroupRepository;

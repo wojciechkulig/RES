@@ -29,7 +29,7 @@ public class DayNightTariffHoursRecognizer {
 		if(tariffGroup.equals("G11")){
 			return getG11HoursForPeriod(startMonth, endMonth);
 		}
-		if(tariffGroup.equals("")){
+		if(tariffGroup.equals("G12")){
 			return getG12DayTariffHoursForPeriod(startMonth, endMonth);
 		}
 		return getG12wDayTariffHoursForPeriod(startMonth, endMonth);

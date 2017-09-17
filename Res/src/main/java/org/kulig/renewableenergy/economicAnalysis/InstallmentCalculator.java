@@ -5,21 +5,21 @@ import java.util.List;
 
 public class InstallmentCalculator {
 	private double interestRate;
-	private double creditDuration;
+	private int creditDuration;
 	private double annualInstalmentPeriods;
 	private double creditAmount;
-	private boolean isInstallmentFixed;
+	private String installmentType;
 
 	public InstallmentCalculator(Credit credit) {
-		this.interestRate = credit.getInterestRate();
+		this.interestRate = credit.getInterestRate()/100;
 		this.creditDuration = credit.getCreditDuration();
 		this.annualInstalmentPeriods = credit.getAnnualInstalmentPeriods();
 		this.creditAmount = credit.getCreditAmount();
-		this.isInstallmentFixed = credit.isInstallmentFixed();
+		this.installmentType = credit.getInstallmentType();
 	}
 
 	public List<Double> getAnnualCreditInstallments() {
-		if (isInstallmentFixed) {
+		if (installmentType.equals("fixed")) {
 			return getAnnualFixedCreditInstallments();
 		} else {
 			return getAnnualDecreasingCreditInstallments();
@@ -41,19 +41,23 @@ public class InstallmentCalculator {
 		for(int i = 0; i <creditDuration; i++){
 			annualFixedCreditInstallments.add(annualInstallments);
 		}
+		addElementsToListUpTo15Elements(annualFixedCreditInstallments);
+		//add zero for this arraylist so it can has the same 
 		return annualFixedCreditInstallments;
 	}
 
 	private List<Double> getAnnualDecreasingCreditInstallments() {
 		double remainingCreditAmount = creditAmount;
-		List<Double> AnnualFixedCreditInstallments = new ArrayList<>();
+		List<Double> annualDecreasingCreditInstallments = new ArrayList<>();
 		for (int i = 0; i < creditDuration; i++) {
 			double capitalPart = creditAmount / creditDuration;
 			double interestPart = getInterestPart(remainingCreditAmount);
 			remainingCreditAmount -= capitalPart;
-			AnnualFixedCreditInstallments.add(capitalPart + interestPart);
+			annualDecreasingCreditInstallments.add(capitalPart + interestPart);
 		}
-		return AnnualFixedCreditInstallments;
+		addElementsToListUpTo15Elements(annualDecreasingCreditInstallments);
+		//add zero for this arraylist so it can iterare
+		return annualDecreasingCreditInstallments;
 	}
 
 	private double getInterestPart(double remainingCreditAmount) {
@@ -63,6 +67,16 @@ public class InstallmentCalculator {
 			remainingCreditAmount -= creditAmount / creditDuration * annualInstalmentPeriods;
 		}
 		return interestPart;
+	}
+	/**
+	 * This method returns 15 element array. It is required to iterate over pv instalation lifetime that is 15 years without exception;
+	 * @param list
+	 * @return
+	 */
+	private void addElementsToListUpTo15Elements(List<Double> list){
+		for(int i = creditDuration; i<15; i++){
+			list.add(0.0);
+		}
 	}
 
 }

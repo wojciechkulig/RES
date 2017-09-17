@@ -3,7 +3,7 @@ package org.kulig.renewableenergy.Energy;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kulig.renewableenergy.model.entities.PvSystemEnergyDistribution;
+import org.kulig.renewableenergy.model.entities.PvSystemEnergyBilance;
 import org.kulig.renewableenergy.model.entities.Weather;
 
 public class EnergyBilanceCalculator {
@@ -29,8 +29,8 @@ public class EnergyBilanceCalculator {
 		this.hourlyWeatherConditions = data.getHourlyWeatherConditions();
 	}
 
-	public List<PvSystemEnergyDistribution> calculateYearlyEnergyBilance(String tariffGroup) {
-		List<PvSystemEnergyDistribution> energyDistribution = new ArrayList<>();
+	public List<PvSystemEnergyBilance> calculateYearlyEnergyBilance(String tariffGroup) {
+		List<PvSystemEnergyBilance> energyDistribution = new ArrayList<>();
 		for (int settlementPeriod = 0; settlementPeriod < numberOfSettlementPeriods; settlementPeriod++) {
 			calculateSettlementPeriodEnergyBilance(settlementPeriod,tariffGroup);
 			energyDistribution.add(getPeriodEnergyBilance());
@@ -57,11 +57,11 @@ public class EnergyBilanceCalculator {
 			if (energyConsumption >= energyProduced) {
 				periodEnergyAutoConsumptionNight += energyProduced;
 				double energyMissing = energyConsumption - energyProduced;
-				periodEnergyTakenFromGridNight -= energyMissing;
+				periodEnergyTakenFromGridNight += energyMissing;
 			} else {
 				periodEnergyAutoConsumptionNight += energyConsumption;
 				double energyExcess = energyProduced - energyConsumption;
-				periodEnergyGridFeedInNight = energyExcess;
+				periodEnergyGridFeedInNight += energyExcess;
 			}
 		}
 
@@ -76,11 +76,11 @@ public class EnergyBilanceCalculator {
 			if (energyConsumption >= energyProduced) {
 				periodEnergyAutoConsumptionDay += energyProduced;
 				double energyMissing = energyConsumption - energyProduced;
-				periodEnergyTakenFromGridDay -= energyMissing;
+				periodEnergyTakenFromGridDay += energyMissing;
 			} else {
 				periodEnergyAutoConsumptionDay += energyConsumption;
 				double energyExcess = energyProduced - energyConsumption;
-				periodEnergyGridFeedInDay = energyExcess;
+				periodEnergyGridFeedInDay += energyExcess;
 			}
 		}
 
@@ -100,8 +100,8 @@ public class EnergyBilanceCalculator {
 
 	}
 
-	private PvSystemEnergyDistribution getPeriodEnergyBilance() {
-		PvSystemEnergyDistribution distribution = new PvSystemEnergyDistribution();
+	private PvSystemEnergyBilance getPeriodEnergyBilance() {
+		PvSystemEnergyBilance distribution = new PvSystemEnergyBilance();
 		distribution.setPeriodEnergyAutoConsumptionDay(periodEnergyAutoConsumptionDay);
 		distribution.setPeriodEnergyAutoConsumptionNight(periodEnergyAutoConsumptionNight);
 		distribution.setPeriodEnergyConsumptionDay(periodEnergyConsumptionDay);

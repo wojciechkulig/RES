@@ -2,7 +2,7 @@ package org.kulig.renewableenergy.Energy;
 
 import java.util.List;
 
-import org.kulig.renewableenergy.model.entities.PvSystemEnergyDistribution;
+import org.kulig.renewableenergy.model.entities.PvSystemEnergyBilance;
 
 public class G12PgeEnergyBilanceStrategy implements AnnualEnergyBilanceStrategy {
 
@@ -11,20 +11,20 @@ public class G12PgeEnergyBilanceStrategy implements AnnualEnergyBilanceStrategy 
 	private double correctionFactor;
 
 	@Override
-	public List<PvSystemEnergyDistribution> calculateAnnualEnergyBalance(AnnualEnergyBilanceInputData data) {
+	public List<PvSystemEnergyBilance> calculateAnnualEnergyBalance(AnnualEnergyBilanceInputData data) {
 		correctionFactor = data.getCorrectionFactor();
 		return settlePeriods(new EnergyBilanceCalculator(data).calculateYearlyEnergyBilance("G12"));
 	}
 
-	private List<PvSystemEnergyDistribution> settlePeriods(
-			List<PvSystemEnergyDistribution> periodsEnergyBilance) {
-		for(PvSystemEnergyDistribution distribution : periodsEnergyBilance){
+	private List<PvSystemEnergyBilance> settlePeriods(
+			List<PvSystemEnergyBilance> periodsEnergyBilance) {
+		for(PvSystemEnergyBilance distribution : periodsEnergyBilance){
 			settlePeriod(distribution);
 		}
 		return periodsEnergyBilance;
 	}
 	
-	private void settlePeriod(PvSystemEnergyDistribution distribution) {
+	private void settlePeriod(PvSystemEnergyBilance distribution) {
 		double energyToPurchaseDay = getAmountOfEnergyPurchasedDay(distribution);
 		double energyToPurchaseNight = getAmountOfEnergyPurchasedNight(distribution);
 		if(energyToPurchaseNight > 0){
@@ -50,7 +50,7 @@ public class G12PgeEnergyBilanceStrategy implements AnnualEnergyBilanceStrategy 
 		
 	}
 	
-	private double getAmountOfEnergyPurchasedDay(PvSystemEnergyDistribution distribution) {
+	private double getAmountOfEnergyPurchasedDay(PvSystemEnergyBilance distribution) {
 		double energyToPurchase = distribution.getPeriodEnergyTakenFromGridDay()
 				- distribution.getPeriodEnergyGridFeedInDay() * correctionFactor;
 		if (energyToPurchase >= 0) {
@@ -73,7 +73,7 @@ public class G12PgeEnergyBilanceStrategy implements AnnualEnergyBilanceStrategy 
 		energyStoredDay += energyToPurchase;
 	}
 
-	private double getAmountOfEnergyPurchasedNight(PvSystemEnergyDistribution distribution) {
+	private double getAmountOfEnergyPurchasedNight(PvSystemEnergyBilance distribution) {
 		double energyToPurchase = distribution.getPeriodEnergyTakenFromGridNight()
 				- distribution.getPeriodEnergyGridFeedInNight() * correctionFactor;
 		if (energyToPurchase >= 0) {

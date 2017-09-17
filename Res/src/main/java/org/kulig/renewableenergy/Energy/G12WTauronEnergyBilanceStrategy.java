@@ -4,14 +4,15 @@ import java.util.List;
 
 import org.kulig.renewableenergy.model.entities.PvSystemEnergyBilance;
 
-public class G12TauronEnergyBilanceStrategy implements AnnualEnergyBilanceStrategy {
+public class G12WTauronEnergyBilanceStrategy implements AnnualEnergyBilanceStrategy {
+
 	private double energyStored = 0;
 	private double correctionFactor;
 
 	@Override
 	public List<PvSystemEnergyBilance> calculateAnnualEnergyBalance(AnnualEnergyBilanceInputData data) {
 		correctionFactor = data.getCorrectionFactor();
-		return settlePeriods(new EnergyBilanceCalculator(data).calculateYearlyEnergyBilance("G12"));
+		return settlePeriods(new EnergyBilanceCalculator(data).calculateYearlyEnergyBilance("G12W"));
 	}
 
 	private List<PvSystemEnergyBilance> settlePeriods(
@@ -46,6 +47,5 @@ public class G12TauronEnergyBilanceStrategy implements AnnualEnergyBilanceStrate
 			}
 		}
 	}
-
 
 }
